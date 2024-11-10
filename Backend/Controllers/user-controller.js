@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 
-import {insertUser} from '../Models/user-model.js'
+import {insertUser,isEmailExist} from '../Models/user-model.js'
 
 
 export const signUp = async(req, res) => {
@@ -19,6 +19,26 @@ export const signUp = async(req, res) => {
   });
 };
 
+export const login = async(req,res)=>{
+  const {email,password} = req.body;
+  
+  try {
+    const user = await isEmailExist(email)
+    if(!user){
+      return res.status(400).json({messge : "incorrect email"})
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+    // console.log('user.password', user.password)
+    // console.log('isPasswordValid', isPasswordValid)
+    if(!isPasswordValid){
+      return res.status(400).json({messge : "incorrect credentiels."})
+    }
+    return res.status(200).json({msg : 'Login successful!',user})
+  } catch (error) {
+    console.error('Error during sign in:', error);
+    return res.status(500).json({ error: 'Something went wrong. Please try again later.' });
+  }
+}
 
 
 
