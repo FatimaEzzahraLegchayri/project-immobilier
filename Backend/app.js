@@ -3,12 +3,12 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import userRoutes from './Routers/user-router.js';
-import { userTable } from './Models/user-model.js'; 
+import { User } from './Models/user-model.js'; 
 
 const app = express();
 app.use(express.json()); 
 
-userTable();
+User();
 app.use('/', userRoutes);
 
 
