@@ -1,6 +1,6 @@
 import pool  from '../Config/connectDb.js'
 
-export const userTable = () => {
+export const User = () => {
     const sql = `
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,  
@@ -20,11 +20,20 @@ export const userTable = () => {
 
 };
 
-export const addUser = (userData, callback) => {
+export const insertUser = async (userData, callback) => {
     const sql = 'INSERT INTO users SET ?';
     pool.query(sql, userData, callback);
 };
-// const createUsers = ()=>{
-// }
-// module.exports = User;
-// export default {userTable,addUser}
+
+export const isEmailExist = async (email) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM users WHERE email = ?';
+        pool.query(sql, [email], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results[0]); 
+            }
+        });
+    });
+};
